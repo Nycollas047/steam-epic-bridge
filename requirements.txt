@@ -1,0 +1,7 @@
+requests
+vdf
+click
+rich
+psutil
+Pillow
+legendary-gl

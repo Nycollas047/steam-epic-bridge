@@ -1,0 +1,12 @@
+import os
+import sys
+
+if sys.stdout is None:
+    sys.stdout = open(os.devnull, "w", encoding="utf-8")
+if sys.stderr is None:
+    sys.stderr = open(os.devnull, "w", encoding="utf-8")
+
+from steam_epic_bridge.cli import cli
+
+if __name__ == "__main__":
+    cli()
