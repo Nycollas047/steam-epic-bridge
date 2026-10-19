@@ -41,10 +41,28 @@ def _console_python_exe() -> str:
     return str(exe)
 
 
+LEGENDARY_MODULE = "python -m legendary"  # valor de legendary_bin: usar o pacote instalado/embutido
+
+
+def legendary_argv(settings: Settings) -> list[str]:
+    """Prefixo de comando que executa o Legendary, sem os argumentos de cada ação.
+
+    - Executável configurado/encontrado: ele mesmo.
+    - Pacote Python (modo código-fonte): o interpretador atual + '-m legendary.cli'.
+    - Executável empacotado (PyInstaller): sys.executable é o próprio app, não um
+      interpretador; o Legendary embutido roda pelo subcomando oculto 'legendary-passthrough'.
+    """
+    import sys
+
+    if settings.legendary_bin != LEGENDARY_MODULE:
+        return [settings.legendary_bin]
+    if getattr(sys, "frozen", False):
+        return [sys.executable, "legendary-passthrough"]
+    return [_console_python_exe(), "-m", "legendary.cli"]
+
+
 def _legendary_cmd(settings: Settings, *args: str) -> list[str]:
-    if settings.legendary_bin == "python -m legendary":
-        return [_console_python_exe(), "-m", "legendary.cli", *args]
-    return [settings.legendary_bin, *args]
+    return [*legendary_argv(settings), *args]
 
 
 def _run_legendary(settings: Settings, *args: str) -> subprocess.CompletedProcess[str]:

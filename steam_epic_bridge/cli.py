@@ -205,6 +205,21 @@ def cli(ctx: click.Context) -> None:
         run_gui()
 
 
+@cli.command(
+    name="legendary-passthrough",
+    hidden=True,
+    add_help_option=False,
+    context_settings={"ignore_unknown_options": True, "allow_extra_args": True},
+)
+@click.argument("args", nargs=-1, type=click.UNPROCESSED)
+def legendary_passthrough_cmd(args: tuple[str, ...]) -> None:
+    """Uso interno: executa o Legendary embutido no app empacotado."""
+    from legendary.cli import main as legendary_main
+
+    sys.argv = ["legendary", *args]
+    legendary_main()
+
+
 @cli.command(name="launch")
 @click.argument("app_name")
 def launch_cmd(app_name: str) -> None:

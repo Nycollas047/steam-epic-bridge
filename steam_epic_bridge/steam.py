@@ -65,14 +65,22 @@ def _ensure_parent(path: Path) -> None:
 
 
 def _load_shortcuts(path: Path) -> dict:
-    if not path.exists():
+    """Lê o shortcuts.vdf. Arquivo ausente ou vazio vira biblioteca vazia.
+
+    Um arquivo que existe mas não pode ser lido NÃO é tratado como vazio: gravar por cima
+    apagaria os atalhos não-Epic do usuário. Nesse caso levanta SteamShortcutsError.
+    """
+    if not path.exists() or path.stat().st_size == 0:
         return {"shortcuts": {}}
     try:
         with path.open("rb") as handle:
             payload = vdf.binary_load(handle)
-        return payload or {"shortcuts": {}}
-    except Exception:
-        return {"shortcuts": {}}
+    except Exception as exc:
+        raise SteamShortcutsError(
+            f"Nao foi possivel ler {path} (arquivo corrompido ou em formato inesperado). "
+            "Nada foi alterado. Se houver um backup (.vdf.bak), use 'restore'."
+        ) from exc
+    return payload or {"shortcuts": {}}
 
 
 def _save_shortcuts(path: Path, payload: dict) -> None:
@@ -179,7 +187,12 @@ def ensure_shortcuts_file(settings: Settings) -> Path:
 
 
 def _find_existing_entry(payload: dict, game: EpicGame) -> dict | None:
-    """Busca atalho existente pela tag 'epic-<app_name>' (ou DevkitGameID / título)."""
+    """Busca atalho existente pela tag 'epic-<app_name>' ou DevkitGameID.
+
+    Como último recurso, reaproveita um atalho antigo do próprio app (que tem a tag
+    SHORTCUT_TAG mas ainda não tem o identificador estável) com o mesmo título.
+    Atalhos criados à mão pelo usuário nunca são reivindicados só pelo nome.
+    """
     target_tag = _shortcut_id(game)
     target_title = game.title.casefold()
 
@@ -189,7 +202,11 @@ def _find_existing_entry(payload: dict, game: EpicGame) -> dict | None:
             return entry
 
     for _, entry in _iter_entries(payload):
-        if str(entry.get("appname", "")).casefold() == target_title:
+        tags = {str(v) for v in entry.get("tags", {}).values()}
+        is_legacy_bridge_entry = SHORTCUT_TAG in tags and not any(
+            t.startswith(APP_ID_PREFIX) for t in tags
+        )
+        if is_legacy_bridge_entry and str(entry.get("appname", "")).casefold() == target_title:
             return entry
 
     return None
