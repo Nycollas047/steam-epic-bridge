@@ -1,0 +1,58 @@
+name: Relato de erro
+description: Algo não funcionou como esperado
+title: "[Erro] "
+labels: ["erro"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Nunca cole** chave do SteamGridDB, código de login (SID) da Epic ou arquivos de configuração do Legendary.
+  - type: textarea
+    id: o-que-aconteceu
+    attributes:
+      label: O que aconteceu?
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que você esperava que acontecesse?
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Passos para reproduzir
+      placeholder: |
+        1. Fechei a Steam
+        2. Cliquei em ...
+        3. Apareceu ...
+    validations:
+      required: true
+  - type: dropdown
+    id: sistema
+    attributes:
+      label: Sistema
+      options:
+        - Windows 11
+        - Windows 10
+        - Linux (desktop)
+        - Steam Deck / SteamOS
+        - Outro
+    validations:
+      required: true
+  - type: input
+    id: steam
+    attributes:
+      label: Tipo de instalação da Steam
+      description: Windows, Linux nativa, Flatpak, Steam Deck...
+  - type: input
+    id: versao
+    attributes:
+      label: Versão do app (ou commit) e do Python
+  - type: textarea
+    id: log
+    attributes:
+      label: Mensagem de erro ou trecho do log
+      description: O log fica em `sync.log`, na pasta de configuração do app. Revise antes de colar.
+      render: text

@@ -1,0 +1,38 @@
+name: Sugestão
+description: Uma ideia, melhoria ou opinião sobre o plano
+title: "[Sugestão] "
+labels: ["sugestão"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por opinar! Não precisa saber programar. Veja o plano em [`docs/PLANO.md`](https://github.com/Nycollas047/steam-epic-bridge/blob/main/docs/PLANO.md) se quiser comentar uma decisão em aberto.
+  - type: textarea
+    id: problema
+    attributes:
+      label: Que problema ou necessidade você tem?
+      description: 'Conte a situação, não a solução. Por exemplo: "Tenho 200 jogos na Epic e adicionar à mão leva horas."'
+    validations:
+      required: true
+  - type: textarea
+    id: ideia
+    attributes:
+      label: O que você sugere?
+    validations:
+      required: true
+  - type: dropdown
+    id: sistema
+    attributes:
+      label: Onde você usaria?
+      multiple: true
+      options:
+        - Windows 11
+        - Windows 10
+        - Linux (desktop)
+        - Steam Deck / SteamOS
+        - Outro
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Já usou outra ferramenta para isso?
+      description: 'Por exemplo: Heroic, BoilR, Steam ROM Manager. O que faltou nela?'

@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.spec
+build/
+dist/
+
+# Unit test / coverage reports
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Virtual Environment
+venv/
+Venv/
+.venv/
+
+# Project specific & Credentials safety
+sync.log
+*.exe
+config.json
+failed_searches.json
+user.json
+installed.json
+.env
+*.bak
+
